@@ -257,6 +257,7 @@
   <div id="accordion"></div>
 
   <div class="toprow" style="justify-content:flex-end;">
+    <button class="btn" id="btn-share" hidden>Share / email the PDF</button>
     <button class="btn secondary" id="btn-generate-all">Generate completed forms</button>
   </div>
 
@@ -393,52 +394,6 @@ function base64ToBytes(b64){
    any signature/date stamps belong.
 --------------------------------------------------------------------- */
 const FORM_REGISTRY = [
-  {
-    id: "creditcardauthorizat",
-    label: "Credit Card Authorization Form 2026",
-    getPdfBytes: () => base64ToBytes(PDF_B64_CREDITCARDAUTHORIZAT),
-    outputName: (p) => `${p.lastName || 'Patient'}_CREDITCARDAUTHORIZAT_${new Date().toISOString().slice(0,10)}.pdf`,
-    profileFieldMap: {},
-    ownFields: [
-      { key: "cardholdername", label: "Cardholder Name", drawOnly: true },
-      { key: "emailAddress", label: "Email Address to send receipt to:", drawOnly: true },
-      { key: "ccNumber", label: "Credit Card Number", drawOnly: true },
-      { key: "field3", label: "Expiry Month", drawOnly: true },
-      { key: "field4", label: "Expiry Year", drawOnly: true },
-      { key: "Cvv", label: "CVV number", drawOnly: true }
-    ],
-    ownDateFields: [],
-    ownRadioGroups: [],
-    ownCheckboxes: [
-      { key: "field1", label: "Check box if not able to direct bill", drawOnly: true },
-      { key: "field2", label: "Checkbox if able to direct bill", drawOnly: true },
-      { key: "field5", label: "Visa?", drawOnly: true },
-      { key: "field6", label: "Mastercard?", drawOnly: true }
-    ],
-    drawFields: [
-      { key: "field1", label: "Check box if not able to direct bill", source: "checkbox", page: 0, x: 36.6, y: 578.2, w: 7.2, h: 8, mark: "X" },
-      { key: "cardholdername", label: "Cardholder Name", source: "own", page: 0, x: 53.4, y: 579.4, size: 10, maxWidth: 171.2 },
-      { key: "field2", label: "Checkbox if able to direct bill", source: "checkbox", page: 0, x: 38.2, y: 467.8, w: 14, h: 12, mark: "X" },
-      { key: "cardholdername", label: "Cardholder Name", source: "own", page: 0, x: 57.4, y: 469, size: 10, maxWidth: 168.8 },
-      { key: "fullName", label: "Full name — First Last", source: "computed", page: 0, x: 98.2, y: 346.6, size: 10, maxWidth: 260.8, recipe: "fullName" },
-      { key: "phone", label: "phone", source: "profile", page: 0, x: 409.4, y: 346.6, size: 10, maxWidth: 115.2, profileKey: "phone" },
-      { key: "emailAddress", label: "Email Address to send receipt to:", source: "own", page: 0, x: 69.4, y: 319.4, size: 10, maxWidth: 303.2 },
-      { key: "cardholdername", label: "Cardholder Name", source: "own", page: 0, x: 120.6, y: 263.4, size: 10, maxWidth: 164.8 },
-      { key: "ccNumber", label: "Credit Card Number", source: "own", page: 0, x: 130.2, y: 237, size: 10, maxWidth: 176.8 },
-      { key: "field3", label: "Expiry Month", source: "own", page: 0, x: 383.8, y: 236.2, size: 10, maxWidth: 25.6 },
-      { key: "field4", label: "Expiry Year", source: "own", page: 0, x: 416.6, y: 236.2, size: 10, maxWidth: 29.6 },
-      { key: "Cvv", label: "CVV number", source: "own", page: 0, x: 474.2, y: 237.8, size: 10, maxWidth: 50.4 },
-      { key: "today", label: "Today's date", source: "today", page: 0, x: 335.8, y: 142.6, size: 10, maxWidth: 120, format: "mm-dd-yyyy" },
-      { key: "field5", label: "Visa?", source: "checkbox", page: 0, x: 122.2, y: 290.7, w: 8, h: 8.8, mark: "X" },
-      { key: "field6", label: "Mastercard?", source: "checkbox", page: 0, x: 155.8, y: 290.7, w: 8, h: 7.2, mark: "X" }
-    ],
-    extraSignaturePads: [
-      { key: "signer1", label: "Signature" }
-    ],
-    signatureStamps: [
-      { role: "custom:signer1", page: 0, x: 95.8, y: 139, w: 216.8, h: 20.8 }
-    ],
-  },
   {
     id: 'aop',
     label: 'Assignment of Payment',
@@ -666,7 +621,49 @@ const FORM_REGISTRY = [
     hasMemberPart2Signature: false,
     needsWitness: true,
     witnessLabel: 'Signature of Provider',
-  }
+  },
+  {
+    id: "creditcardauthorizat",
+    label: "Credit Card Authorization Form 2026",
+    getPdfBytes: () => base64ToBytes(PDF_B64_CREDITCARDAUTHORIZAT),
+    outputName: (p) => `${p.lastName || 'Patient'}_CREDITCARDAUTHORIZAT_${new Date().toISOString().slice(0,10)}.pdf`,
+    ownFields: [
+      { key: "cardholdername", label: "Cardholder Name", drawOnly: true },
+      { key: "emailAddress", label: "Email Address to send receipt to:", drawOnly: true },
+      { key: "ccNumber", label: "Credit Card Number", drawOnly: true },
+      { key: "field3", label: "Expiry Month", drawOnly: true },
+      { key: "field4", label: "Expiry Year", drawOnly: true },
+      { key: "Cvv", label: "CVV number", drawOnly: true }
+    ],
+    ownDateFields: [],
+    ownRadioGroups: [],
+    ownCheckboxes: [
+      { key: "field1", label: "Check box if not able to direct bill", drawOnly: true },
+      { key: "field2", label: "Checkbox if able to direct bill", drawOnly: true }
+    ],
+    drawFields: [
+      { key: "field1", label: "Check box if not able to direct bill", source: "checkbox", page: 0, x: 36.6, y: 578.2, w: 7.2, h: 8, mark: "X" },
+      { key: "cardholdername", label: "Cardholder Name", source: "own", page: 0, x: 53.4, y: 579.4, size: 10, maxWidth: 171.2 },
+      { key: "field2", label: "Checkbox if able to direct bill", source: "checkbox", page: 0, x: 38.2, y: 467.8, w: 14, h: 12, mark: "X" },
+      { key: "cardholdername", label: "Cardholder Name", source: "own", page: 0, x: 57.4, y: 469, size: 10, maxWidth: 168.8 },
+      { key: "fullName", label: "Full name — First Last", source: "computed", page: 0, x: 98.2, y: 346.6, size: 10, maxWidth: 260.8, recipe: "fullName" },
+      { key: "phone", label: "phone", source: "profile", page: 0, x: 409.4, y: 346.6, size: 10, maxWidth: 115.2, profileKey: "phone" },
+      { key: "emailAddress", label: "Email Address to send receipt to:", source: "own", page: 0, x: 69.4, y: 319.4, size: 10, maxWidth: 303.2 },
+      { key: "cardholdername", label: "Cardholder Name", source: "own", page: 0, x: 120.6, y: 263.4, size: 10, maxWidth: 164.8 },
+      { key: "ccNumber", label: "Credit Card Number", source: "own", page: 0, x: 130.2, y: 237, size: 10, maxWidth: 176.8 },
+      { key: "field3", label: "Expiry Month", source: "own", page: 0, x: 383.8, y: 236.2, size: 10, maxWidth: 25.6 },
+      { key: "field4", label: "Expiry Year", source: "own", page: 0, x: 416.6, y: 236.2, size: 10, maxWidth: 29.6 },
+      { key: "Cvv", label: "CVV number", source: "own", page: 0, x: 474.2, y: 237.8, size: 10, maxWidth: 50.4 },
+      { key: "today", label: "Today's date", source: "today", page: 0, x: 335.8, y: 142.6, size: 10, maxWidth: 120, format: "mm-dd-yyyy" }
+    ],
+    extraSignaturePads: [
+      { key: "signer1", label: "Signature" }
+    ],
+    signatureStamps: [
+      { role: "custom:signer1", page: 0, x: 95.8, y: 139, w: 216.8, h: 20.8 }
+    ],
+  },
+
 ];
 
 /* ---------------------------------------------------------------------
@@ -1316,6 +1313,51 @@ function downloadBytes(bytes, filename){
   URL.revokeObjectURL(url);
 }
 
+/* ---------------------------------------------------------------------
+   Sharing the generated PDF
+   ---------------------------------------------------------------------
+   On iOS the download lands in a preview window, which makes emailing it a
+   save-then-find-then-attach job. The Web Share API hands the file straight
+   to the native share sheet instead, so it's one tap to Outlook (or Mail, or
+   anything else installed — the sheet is the user's choice, not ours).
+
+   Two constraints shape this:
+
+   1. Sharing files needs a user gesture that is still "live". Generating the
+      PDF involves a series of awaits, and Safari usually invalidates the
+      gesture across them — calling share() at the end of the generate handler
+      fails intermittently with NotAllowedError. So generation stashes the
+      bytes and reveals this button, and the button's own click calls share()
+      immediately with what is already in memory.
+
+   2. Support is patchy. Desktop Safari can't share files at all, so the
+      button only ever appears where canShare() says files are supported.
+      The download still happens either way; this is purely additive.
+--------------------------------------------------------------------- */
+let lastGenerated = null;   // { bytes, filename }
+
+function canShareFiles(){
+  try {
+    if (!navigator.canShare || !navigator.share) return false;
+    const probe = new File([new Uint8Array([37,80,68,70])], 'probe.pdf', { type:'application/pdf' });
+    return navigator.canShare({ files: [probe] });
+  } catch(e){ return false; }
+}
+
+const SHARE_SUPPORTED = canShareFiles();
+
+function offerShare(bytes, filename){
+  lastGenerated = { bytes, filename };
+  const btn = document.getElementById('btn-share');
+  if (btn) btn.hidden = !SHARE_SUPPORTED;
+}
+
+function clearShare(){
+  lastGenerated = null;
+  const btn = document.getElementById('btn-share');
+  if (btn) btn.hidden = true;
+}
+
 function setStatus(el, msg, kind){
   el.textContent = msg;
   el.className = `status-msg show ${kind}`;
@@ -1398,6 +1440,7 @@ document.getElementById('btn-generate-all').addEventListener('click', async ()=>
     }
 
     if (!included.length){
+      clearShare();
       setStatus(globalStatus, 'None of the checked forms could be built — see the error(s) above.', 'err');
       return;
     }
@@ -1408,10 +1451,41 @@ document.getElementById('btn-generate-all').addEventListener('click', async ()=>
     const firstName = (profile.firstName || '').trim();
     const filename = `${todayStr} ${lastName}${firstName ? ', ' + firstName : ''} Insurance Forms.pdf`;
     downloadBytes(outBytes, filename);
-    setStatus(globalStatus, `Combined PDF generated with ${included.length} form(s): ${included.join(', ')}.`, 'ok');
+    offerShare(outBytes, filename);
+    setStatus(globalStatus,
+      `Combined PDF generated with ${included.length} form(s): ${included.join(', ')}.`
+      + (SHARE_SUPPORTED ? ' Use “Share / email the PDF” to send it straight to Outlook.' : ''),
+      'ok');
   }catch(err){
     console.error(err);
+    clearShare();
     setStatus(globalStatus, `Could not generate the combined PDF: ${err.message}`, 'err');
+  }
+});
+
+/* The click handler is deliberately thin: everything slow already happened
+   during generation, so share() runs inside the gesture that triggered it. */
+document.getElementById('btn-share').addEventListener('click', async ()=>{
+  const globalStatus = document.getElementById('global-status');
+  if (!lastGenerated){
+    setStatus(globalStatus, 'Generate the forms first, then share.', 'err');
+    return;
+  }
+  try{
+    const file = new File([lastGenerated.bytes], lastGenerated.filename, { type:'application/pdf' });
+    if (!navigator.canShare || !navigator.canShare({ files:[file] })){
+      setStatus(globalStatus, 'This device cannot share files — use the downloaded copy instead.', 'err');
+      return;
+    }
+    // Most iOS mail targets ignore title and text when a file is attached, so
+    // don't rely on the subject arriving; the attachment is the point.
+    await navigator.share({ files:[file], title: lastGenerated.filename });
+  }catch(err){
+    // Dismissing the share sheet throws AbortError. That's a normal outcome,
+    // not something to shout about.
+    if (err && err.name === 'AbortError') return;
+    console.error(err);
+    setStatus(globalStatus, `Could not open the share sheet: ${err.message}. The PDF has already been downloaded.`, 'err');
   }
 });
 
@@ -1430,6 +1504,7 @@ document.getElementById('btn-reset').addEventListener('click', ()=>{
     t.setAttribute('aria-expanded','false');
     t.querySelector('[data-role="state"]').textContent = 'not started';
   });
+  clearShare();
   setStatus(document.getElementById('global-status'), 'Session cleared.', 'info');
 });
 
