@@ -395,6 +395,52 @@ function base64ToBytes(b64){
 --------------------------------------------------------------------- */
 const FORM_REGISTRY = [
   {
+    id: "creditcardauthorizat",
+    label: "Credit Card Authorization Form 2026",
+    getPdfBytes: () => base64ToBytes(PDF_B64_CREDITCARDAUTHORIZAT),
+    outputName: (p) => `${p.lastName || 'Patient'}_CREDITCARDAUTHORIZAT_${new Date().toISOString().slice(0,10)}.pdf`,
+    profileFieldMap: {},
+    ownFields: [
+      { key: "cardholdername", label: "Cardholder Name", drawOnly: true },
+      { key: "emailAddress", label: "Email Address to send receipt to:", drawOnly: true },
+      { key: "ccNumber", label: "Credit Card Number", drawOnly: true },
+      { key: "field3", label: "Expiry Month", drawOnly: true },
+      { key: "field4", label: "Expiry Year", drawOnly: true },
+      { key: "Cvv", label: "CVV number", drawOnly: true }
+    ],
+    ownDateFields: [],
+    ownRadioGroups: [],
+    ownCheckboxes: [
+      { key: "field1", label: "Check box if not able to direct bill", drawOnly: true },
+      { key: "field2", label: "Checkbox if able to direct bill", drawOnly: true },
+      { key: "field5", label: "Visa Card?", drawOnly: true },
+      { key: "field6", label: "Mastercard?", drawOnly: true }
+    ],
+    drawFields: [
+      { key: "field1", label: "Check box if not able to direct bill", source: "checkbox", page: 0, x: 36.6, y: 578.2, w: 7.2, h: 8, mark: "X" },
+      { key: "cardholdername", label: "Cardholder Name", source: "own", page: 0, x: 53.4, y: 579.4, size: 10, maxWidth: 171.2 },
+      { key: "field2", label: "Checkbox if able to direct bill", source: "checkbox", page: 0, x: 38.2, y: 467.8, w: 14, h: 12, mark: "X" },
+      { key: "cardholdername", label: "Cardholder Name", source: "own", page: 0, x: 57.4, y: 469, size: 10, maxWidth: 168.8 },
+      { key: "fullName", label: "Full name — First Last", source: "computed", page: 0, x: 98.2, y: 346.6, size: 10, maxWidth: 260.8, recipe: "fullName" },
+      { key: "phone", label: "phone", source: "profile", page: 0, x: 409.4, y: 346.6, size: 10, maxWidth: 115.2, profileKey: "phone" },
+      { key: "emailAddress", label: "Email Address to send receipt to:", source: "own", page: 0, x: 69.4, y: 319.4, size: 10, maxWidth: 303.2 },
+      { key: "cardholdername", label: "Cardholder Name", source: "own", page: 0, x: 120.6, y: 263.4, size: 10, maxWidth: 164.8 },
+      { key: "ccNumber", label: "Credit Card Number", source: "own", page: 0, x: 130.2, y: 237, size: 10, maxWidth: 176.8 },
+      { key: "field3", label: "Expiry Month", source: "own", page: 0, x: 383.8, y: 236.2, size: 10, maxWidth: 25.6 },
+      { key: "field4", label: "Expiry Year", source: "own", page: 0, x: 416.6, y: 236.2, size: 10, maxWidth: 29.6 },
+      { key: "Cvv", label: "CVV number", source: "own", page: 0, x: 474.2, y: 237.8, size: 10, maxWidth: 50.4 },
+      { key: "today", label: "Today's date", source: "today", page: 0, x: 335.8, y: 142.6, size: 10, maxWidth: 120, format: "mm-dd-yyyy" },
+      { key: "field5", label: "Visa Card?", source: "checkbox", page: 0, x: 121.4, y: 291, w: 8.8, h: 6.4, mark: "X" },
+      { key: "field6", label: "Mastercard?", source: "checkbox", page: 0, x: 154.8, y: 291.8, w: 7.2, h: 4.8, mark: "X" }
+    ],
+    extraSignaturePads: [
+      { key: "signer1", label: "Signature" }
+    ],
+    signatureStamps: [
+      { role: "custom:signer1", page: 0, x: 95.8, y: 139, w: 216.8, h: 20.8 }
+    ],
+  },
+  {
     id: 'aop',
     label: 'Assignment of Payment',
     note: 'PBC / BC Life — pays supplier directly',
@@ -416,11 +462,14 @@ const FORM_REGISTRY = [
 
     // fields unique to this form, rendered inside its accordion panel
     ownFields: [
-      { key:'policyNumber', label:'Policy number', pdfField:'Policy number' },
-      { key:'idNumber', label:'ID number', pdfField:'ID number' },
+      // inputMode 'tel' gives the numeric keypad on a phone while leaving the
+      // ABC key reachable — safe for identifiers that might carry a letter.
+      // Switch to 'numeric' on any of these that is provably digits-only.
+      { key:'policyNumber', label:'Policy number', pdfField:'Policy number', inputMode:'tel' },
+      { key:'idNumber', label:'ID number', pdfField:'ID number', inputMode:'tel' },
       { key:'otherInsurer', label:'Other insurer name (if applicable)', pdfField:'undefined' },
-      { key:'memberPolicyNum', label:"Member's policy number (other plan)", pdfField:'Members policy number' },
-      { key:'memberIdNum', label:"Member's ID number (other plan)", pdfField:'Members ID number' },
+      { key:'memberPolicyNum', label:"Member's policy number (other plan)", pdfField:'Members policy number', inputMode:'tel' },
+      { key:'memberIdNum', label:"Member's ID number (other plan)", pdfField:'Members ID number', inputMode:'tel' },
       { key:'spouseFirstName', label:"Spouse's first name", pdfField:'Spouses first name if spouses plan' },
       { key:'spouseLastName', label:"Spouse's last name", pdfField:'Spouses last name if spouses plan' },
     ],
@@ -621,49 +670,7 @@ const FORM_REGISTRY = [
     hasMemberPart2Signature: false,
     needsWitness: true,
     witnessLabel: 'Signature of Provider',
-  },
-  {
-    id: "creditcardauthorizat",
-    label: "Credit Card Authorization Form 2026",
-    getPdfBytes: () => base64ToBytes(PDF_B64_CREDITCARDAUTHORIZAT),
-    outputName: (p) => `${p.lastName || 'Patient'}_CREDITCARDAUTHORIZAT_${new Date().toISOString().slice(0,10)}.pdf`,
-    ownFields: [
-      { key: "cardholdername", label: "Cardholder Name", drawOnly: true },
-      { key: "emailAddress", label: "Email Address to send receipt to:", drawOnly: true },
-      { key: "ccNumber", label: "Credit Card Number", drawOnly: true },
-      { key: "field3", label: "Expiry Month", drawOnly: true },
-      { key: "field4", label: "Expiry Year", drawOnly: true },
-      { key: "Cvv", label: "CVV number", drawOnly: true }
-    ],
-    ownDateFields: [],
-    ownRadioGroups: [],
-    ownCheckboxes: [
-      { key: "field1", label: "Check box if not able to direct bill", drawOnly: true },
-      { key: "field2", label: "Checkbox if able to direct bill", drawOnly: true }
-    ],
-    drawFields: [
-      { key: "field1", label: "Check box if not able to direct bill", source: "checkbox", page: 0, x: 36.6, y: 578.2, w: 7.2, h: 8, mark: "X" },
-      { key: "cardholdername", label: "Cardholder Name", source: "own", page: 0, x: 53.4, y: 579.4, size: 10, maxWidth: 171.2 },
-      { key: "field2", label: "Checkbox if able to direct bill", source: "checkbox", page: 0, x: 38.2, y: 467.8, w: 14, h: 12, mark: "X" },
-      { key: "cardholdername", label: "Cardholder Name", source: "own", page: 0, x: 57.4, y: 469, size: 10, maxWidth: 168.8 },
-      { key: "fullName", label: "Full name — First Last", source: "computed", page: 0, x: 98.2, y: 346.6, size: 10, maxWidth: 260.8, recipe: "fullName" },
-      { key: "phone", label: "phone", source: "profile", page: 0, x: 409.4, y: 346.6, size: 10, maxWidth: 115.2, profileKey: "phone" },
-      { key: "emailAddress", label: "Email Address to send receipt to:", source: "own", page: 0, x: 69.4, y: 319.4, size: 10, maxWidth: 303.2 },
-      { key: "cardholdername", label: "Cardholder Name", source: "own", page: 0, x: 120.6, y: 263.4, size: 10, maxWidth: 164.8 },
-      { key: "ccNumber", label: "Credit Card Number", source: "own", page: 0, x: 130.2, y: 237, size: 10, maxWidth: 176.8 },
-      { key: "field3", label: "Expiry Month", source: "own", page: 0, x: 383.8, y: 236.2, size: 10, maxWidth: 25.6 },
-      { key: "field4", label: "Expiry Year", source: "own", page: 0, x: 416.6, y: 236.2, size: 10, maxWidth: 29.6 },
-      { key: "Cvv", label: "CVV number", source: "own", page: 0, x: 474.2, y: 237.8, size: 10, maxWidth: 50.4 },
-      { key: "today", label: "Today's date", source: "today", page: 0, x: 335.8, y: 142.6, size: 10, maxWidth: 120, format: "mm-dd-yyyy" }
-    ],
-    extraSignaturePads: [
-      { key: "signer1", label: "Signature" }
-    ],
-    signatureStamps: [
-      { role: "custom:signer1", page: 0, x: 95.8, y: 139, w: 216.8, h: 20.8 }
-    ],
-  },
-
+  }
 ];
 
 /* ---------------------------------------------------------------------
@@ -892,13 +899,26 @@ function applyConditionalFields(form, panel){
   });
 }
 
+/* Which on-screen keyboard iOS offers for a field. Set per field, because
+   "numeric" gives a keypad with no way to type a letter at all — right for a
+   CVV, wrong for any ID number that might carry one. "tel" is the safe middle
+   ground: the same big keypad, but ABC is still reachable.
+
+   type="number" is deliberately not an option — it strips leading zeros and
+   reports an empty value when the browser dislikes the content, which would
+   quietly mangle an ID number beginning with 0. */
+function inputModeAttr(f){
+  const m = f && f.inputMode;
+  return m ? ` inputmode="${m}"` : '';
+}
+
 function renderOwnFieldHtml(form, f){
   const condGroup = (form.conditionalFields||[]).find(cg => cg.fieldKeys.includes(f.key));
   const wrapAttrs = condGroup
     ? ` style="display:none;" data-cond-radio="${condGroup.radioKey}" data-cond-value="${condGroup.showValue}"`
     : '';
   return `<div${wrapAttrs}><label for="f-${form.id}-${f.key}">${f.label}</label>
-    <input type="text" id="f-${form.id}-${f.key}" placeholder="${f.placeholder||''}"></div>`;
+    <input type="text" id="f-${form.id}-${f.key}" placeholder="${f.placeholder||''}"${inputModeAttr(f)}></div>`;
 }
 function renderRadioGroupHtml(form, rg){
   let html = `<div style="margin-top:12px;"><label style="margin-bottom:6px;">${rg.label}</label><div class="radio-row">`;
@@ -961,7 +981,7 @@ function buildFormPanelHtml(form){
   html += `<fieldset><legend>${form.ownDateFields.length ? 'Signatures &amp; dates' : 'Signatures'}</legend><div class="grid">`;
   (form.ownDateFields || []).forEach(d=>{
     html += `<div><label for="f-${form.id}-${d.key}">${d.label}</label>
-      <input type="text" id="f-${form.id}-${d.key}" placeholder="${d.placeholder||''}"></div>`;
+      <input type="text" id="f-${form.id}-${d.key}" placeholder="${d.placeholder||''}"${inputModeAttr(d)}></div>`;
   });
   html += '</div>';
 
