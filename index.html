@@ -402,11 +402,11 @@ const FORM_REGISTRY = [
     profileFieldMap: {},
     ownFields: [
       { key: "cardholdername", label: "Cardholder Name", drawOnly: true },
-      { key: "emailAddress", label: "Email Address to send receipt to:", drawOnly: true },
-      { key: "ccNumber", label: "Credit Card Number", drawOnly: true },
-      { key: "field3", label: "Expiry Month", drawOnly: true },
-      { key: "field4", label: "Expiry Year", drawOnly: true },
-      { key: "Cvv", label: "CVV number", drawOnly: true }
+      { key: "emailAddress", label: "Email Address to send receipt to:", drawOnly: true, inputMode: "email" },
+      { key: "ccNumber", label: "Credit Card Number", drawOnly: true, inputMode: "numeric" },
+      { key: "field3", label: "Expiry Month", drawOnly: true, inputMode: "numeric" },
+      { key: "field4", label: "Expiry Year", drawOnly: true, inputMode: "numeric" },
+      { key: "Cvv", label: "CVV number", drawOnly: true, inputMode: "numeric" }
     ],
     ownDateFields: [],
     ownRadioGroups: [],
