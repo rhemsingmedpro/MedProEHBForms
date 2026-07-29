@@ -525,7 +525,7 @@ const FORM_REGISTRY = [
   {
     id: 'aop',
     label: 'Assignment of Payment',
-    note: 'PBC / BC Life — pays supplier directly',
+    note: 'PACIFIC Blue Only - pays supplier directly',
     getPdfBytes: () => base64ToBytes(PDF_B64_AOP),
     outputName: (p) => `${p.lastName || 'Patient'}_AOP_${new Date().toISOString().slice(0,10)}.pdf`,
     // Baked-in MedPro payee defaults — keep their original appearance exactly.
